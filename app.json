@@ -1,0 +1,17 @@
+{
+  "name": "bot-team-turnos",
+  "description": "Bot de Teams para gestión de turnos",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "env": {
+    "MicrosoftAppId": {"required": true},
+    "MicrosoftAppPassword": {"required": true},
+    "PG_HOST": {"required": true},
+    "PG_PORT": {"required": true},
+    "PG_DB": {"required": true},
+    "PG_USER": {"required": true},
+    "PG_PASSWORD": {"required": true},
+    "ASIGNAR_TURNO_URL": {"required": true}
+  }
+}
