@@ -31,8 +31,24 @@ class TeamsBot extends TeamsActivityHandler {
       }
       await next();
     });
-    this.onInvokeActivity(async (context) => {
-      if (!context.activity || !context.activity.value) {
+    // Note: do not call this.onInvokeActivity(...) here — override the class method below instead.
+  }
+
+  async onInvokeActivity(context) {
+    try {
+      // Defensive checks: ensure activity exists before reading properties
+      if (!context || !context.activity) {
+        console.log('onInvokeActivity: missing context or context.activity');
+        return { status: 200 };
+      }
+      // Log activity shape for debugging (non-blocking)
+      try {
+        console.log('onInvokeActivity.activity:', JSON.stringify(context.activity));
+      } catch (e) {
+        console.log('onInvokeActivity.activity: <non-serializable>');
+      }
+
+      if (!context.activity.value) {
         return { status: 200 };
       }
       const verb = context.activity.value.verb;
@@ -45,7 +61,10 @@ class TeamsBot extends TeamsActivityHandler {
         await handleCancelar(context, data);
       }
       return { status: 200 };
-    });
+    } catch (err) {
+      console.error('Error in onInvokeActivity handler:', err);
+      return { status: 500 };
+    }
   }
 
   static getConversationReference(activity) {
@@ -120,5 +139,7 @@ function notifyTurnoHandler(adapter) {
   };
 }
 
-module.exports = new TeamsBot();
-module.exports.notifyTurnoHandler = notifyTurnoHandler;
+module.exports = {
+  TeamsBot,
+  notifyTurnoHandler
+};
